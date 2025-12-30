@@ -1,10 +1,10 @@
-session_name: cpp-opengl-glfw
+session_name: cpp-opengl-glfw-glad-cmake
 windows:
   - window_name: editor-project
     shell_command_before:
-      - cd ~/Developer/BocanOnlineTemplates/cpp-opengl-glfw/
+      - cd ~/Developer/BocanOnlineTemplates/cpp-opengl-glfw-glad-cmake/
       - nvim
   - window_name: shell
     shell_command_before:
-      - cd ~/Developer/BocanOnlineTemplates/cpp-opengl-glfw
+      - cd ~/Developer/BocanOnlineTemplates/cpp-opengl-glfw-glad-cmake/
 

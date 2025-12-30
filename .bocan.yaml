@@ -1,7 +1,7 @@
-project: cpp-opengl-glfw
+project: cpp-opengl-glfw-glad-cmake
 description: >
-  Template for C++ projects with a Graphical User Interface (GUI) implemented 
-  using OpenGL and GLFW.
+  Template for C++ projects with cross-platform Graphical User Interface (GUI) 
+  implemented using OpenGL, GLFW, and GLAD, imported and built using CMake.
 language: C++
 environment: CMake, Make
 requires:
