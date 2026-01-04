@@ -1,40 +1,45 @@
-# ProjectTemplate
-## The Bocan Online C++ Project Template
+# cpp-opengl-glfw-glad-cmake
+## Bocan Online C++ OpenGL Template
 
-A template for C++ projects for Bocan Online and Bocan Studio. 
+Template for C++ projects with cross-platform Graphical User Interface (GUI) 
+implemented using OpenGL, GLFW, and GLAD, imported and built using CMake.
 
 ### Overview
 
-This repository is a start point for developing projects written in C++. It 
-uses a monorepo layout featuring an internal static library for core code
-(Template-Core) and an application featuring application-specific code 
-(Template-App). This architecture is inspired by 
-[TheCherno's C++ Architecture](https://github.com/TheCherno/Architecture)
-design. This repository  can be used via git clone, or integrated via the 
-[Bocan Online Developer Toolkit](https://github.com/BocanOnline/PythonUtilities)
-or whatever development workflow that you use.
+This repository is primarily a CMake template and a code reference for setting 
+up OpenGL projects using GLFW, GLAD, and GLM. 
+
+Inspiration for this project started with this demonstration by 
+[onlyfastcode](https://www.youtube.com/watch?v=dA991DBSZh4). I referenced 
+TheCherno's [OpenGL Series](https://youtube.com/playlist?list=PLlrATfBNZ98foTJPJ_Ev03o2oq3-GGOS2&si=tBsiXclFn_QX6l1E) 
+to learn more about OpenGL and modifying the OpenGL portion.
 
 ### Architecture
 
+This particular application does not use a static library. All functions
+and modules used can be found in the main.cpp file. The main.cpp has comments to
+show which part of the program is doing what, what functions are being called, 
+libraries being used, etc. I deliberately chose not to abstract away very much
+to demonstrate the various OpenGL and GLFW functions.
+
 ```mermaid
 classDiagram
-        Core <|-- App
-
-        Core : Reusable Modules
-        Core : Static Library
-        Core : Unit Tests
-        Core : Main Loop
+        App<|-- Vendor
 
         App : Application-Specific
         App : Executable
-        App : Integration Tests
         App : Main Function
+        
+        Vendor : GLFW
+        Vendor : GLAD
+        Vendor : GLM
+
 ```
 
 ### Directory Structure
 
 ```
-├./
+./
 ├── CMakeLists.txt
 ├── CMakePresets.json
 ├── LICENSE.md
@@ -48,25 +53,33 @@ classDiagram
 │   ├── run-release.sh*
 │   └── run-test.sh*
 ├── source/
-│   ├── Template-App/
+│   ├── OpenGLTemplate-App/
 │   │   ├── CMakeLists.txt
 │   │   ├── source/
 │   │   │   └── main.cpp
 │   │   └── vendor/
-│   └── Template-Core/
+│   └── OpenGLTemplate-Core/
 │       ├── CMakeLists.txt
 │       ├── source/
-│       │   ├── Module.cpp
-│       │   ├── Module.hpp
-│       │   └── Module.test.cpp
 │       └── vendor/
 ├── test/
 └── vendor/
+    ├── CMakeLists.txt
+    ├── glad/
+    │   └── CMakeLists.txt
+    ├── glfw/
+    │   └── CMakeLists.txt
+    └── glm/
+        └── CMakeLists.txt
 ```
 
 ---
 
 ## Using this Template
+
+This template is best used as a CMake template to get the dependencies imported
+and linked correctly to begin a new project. It can be used for basic OpenGL 
+demonstrations as well.
 
 To begin using this template, the most straightforward method would be to use git
 clone to bring the repo contents to your local machine. From there you can test 
@@ -98,7 +111,7 @@ files and add the respective directory structure.
 ```bash
 # from the desired parent directory
 
-git clone https://github.com/BocanOnlineTemplates/ProjectTemplate
+git clone https://github.com/BocanOnlineTemplates/cpp-opengl-glfw-glad-cmake
 ```
 
 ### 2. Rename the project.
@@ -110,7 +123,7 @@ reflect the name of your project.
 #[[ ../project_root/CMakeLists.txt ]]
 #[[ Change 'Template' to your Project Name ]]
 
-project(Template CXX)
+project(OpenGLTemplate CXX)
 ```
 
 You can then edit the Template-App and Template-Core directories and the 
@@ -118,7 +131,7 @@ associated files to also match your project name (e.g. NewName-Core and NewName-
 
 
 > [!IMPORTANT] 
-> The name of the project in CMake and the names of the project directories (Template-Core and Template-App) must match for CMake to build the project properly.
+> The name of the project in CMake and the names of the project directories (OpenGLTemplate-Core and OpenGLTemplate-App) must match for CMake to build the project properly.
 
 
 ### 3. Build the project.
@@ -133,7 +146,7 @@ to be installed as well as your build system of choice (e.g. Make, Ninja, etc.).
 chmod +x ./scripts/build-clean.sh \
 ./scripts/build-debug.sh \
 ./scripts/build-release.sh \
-./scripts/build-test.sh \
+./scripts/run-test.sh \
 ./scripts/build-run-debug.sh \
 ./scripts/build-run-release.sh
 ```
@@ -141,7 +154,7 @@ chmod +x ./scripts/build-clean.sh \
 ```bash
 # run each script from the project directory
 
-./scripts/clean.sh              # clean all artifacts and delete build directories 
+./scripts/build-clean.sh        # clean all artifacts and delete build directories 
 ./scripts/build-debug.sh        # build the debug configuration to build-debug/ 
 ./scripts/build-release.sh      # build the release configuration to build-release/
 ./scripts/run-test.sh           # run all registered tests with ctest 
@@ -164,8 +177,6 @@ chmod +x ./scripts/build-clean.sh \
 ## Documentation
 
 README.md
-
-[CONTRIBUTING.md](/CONTRIBUTING.md)
 
 [//]: # (TODO: Add link to docs/ root to documentation tree.)
 

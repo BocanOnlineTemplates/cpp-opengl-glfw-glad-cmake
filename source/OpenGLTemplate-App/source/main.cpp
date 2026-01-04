@@ -6,11 +6,10 @@
 // project: cpp-opengl-glfw-glad-cmake
 // file: main.cpp
 ////////////////////////////////////////////////////////////////////////////////
-#include "glm/ext/scalar_constants.hpp"
-#include <cmath>
-
 #include <iostream>
 #include <array>
+
+#include <cmath>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -18,7 +17,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "glm/ext/scalar_constants.hpp"
 
+////////////////////////////////////////////////////////////////////////////////
+// Application Settings Macros
+////////////////////////////////////////////////////////////////////////////////
 #define SCREEN_HEIGHT       1080
 #define SCREEN_WIDTH        1920
 #define WINDOW_TITLE        "Bocan Online C++ OpenGL 2D Demo"
@@ -31,8 +34,9 @@
 
 #define INFOLOG_SIZE        512
 
-struct Settings { };
-
+////////////////////////////////////////////////////////////////////////////////
+// Custom Types for State Management
+////////////////////////////////////////////////////////////////////////////////
 enum class KeyboardInputType {
 
     None = 0,
@@ -107,6 +111,7 @@ glm::mat4 proj_mat = glm::mat4(1.0f);       // orthographic projection matrix
 
 ////////////////////////////////////////////////////////////////////////////////
 // Function Declarations
+// --Limited abstraction of OpenGL functions. This is a deliberate choice.
 ////////////////////////////////////////////////////////////////////////////////
 void OnKeyboardInput(GLFWwindow* window, float delta_time);
 void OnWindowResize(GLFWwindow* window, int width, int height);
@@ -114,9 +119,6 @@ void OnRender(GLFWwindow* window);
 
 void GenerateCircleVertices();
 
-void SetupShader();
-void SetupVertexArray();
-void SetupVertexBuffer();
 void Draw(unsigned int buffer, glm::mat4 model_mat, glm::vec4 color, int vertices_size);
 
 void ResetCamera();
@@ -416,10 +418,11 @@ int main(int argc, char** argv) {
         float current_frame_start_time = static_cast<float>(glfwGetTime());
         float delta_time = current_frame_start_time - last_frame_start_time;
         last_frame_start_time = current_frame_start_time;
+        
+        glfwPollEvents();
 
         OnKeyboardInput(window, delta_time);
         OnRender(window);
-        glfwPollEvents();
     }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -437,9 +440,6 @@ int main(int argc, char** argv) {
     return 0;
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Event Called by glfwSetFramebufferSizeCallback; Handles Window Resize
-////////////////////////////////////////////////////////////////////////////////
 void OnWindowResize(GLFWwindow* window, int width, int height) {
 
     std::cout << "GLFW Window Resize:\t" << width << "\t" << height << std::endl;
@@ -453,9 +453,6 @@ void OnWindowResize(GLFWwindow* window, int width, int height) {
     OnRender(window);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Event Called by glfwPollEvents; Dispatches Key Press to Appropriate Function
-////////////////////////////////////////////////////////////////////////////////
 void OnKeyboardInput(GLFWwindow* window, float delta_time) {
 
     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) { 
@@ -603,9 +600,6 @@ void OnKeyboardInput(GLFWwindow* window, float delta_time) {
     }
 }
 
-////////////////////////////////////////////////////////////////////////////////
-// Event Called on Main Loop
-////////////////////////////////////////////////////////////////////////////////
 void OnRender(GLFWwindow* window) {
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -637,15 +631,11 @@ void OnRender(GLFWwindow* window) {
     glfwSwapBuffers(window);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-////////////////////////////////////////////////////////////////////////////////
 void GenerateCircleVertices() {
 
     circle_vertices[ 0 ] = MODEL_LENGTH/2.0f * std::cosf(2.0f * glm::pi<float>() * 0 / CIRCLE_SEGMENTS);
     circle_vertices[ 1 ] = MODEL_LENGTH/2.0f * std::sinf(2.0f * glm::pi<float>() * 0 / CIRCLE_SEGMENTS);
     circle_vertices[ 2 ] = 0.0f;
-        
 
     for(int i = 3; i < CIRCLE_SEGMENTS - 3; i+=6) {
         
@@ -655,29 +645,20 @@ void GenerateCircleVertices() {
 
             circle_vertices[ i ] = 0.0f;
         }
-
         circle_vertices[i+1] = MODEL_LENGTH/2.0f * std::sinf(2.0f * glm::pi<float>() * i / CIRCLE_SEGMENTS);
         
         if(circle_vertices[i+1] < 0.1f && circle_vertices[i+1] > -0.1f) {
 
             circle_vertices[i+1] = 0.0f;
         }
-
         circle_vertices[i+2] = 0.0f;
         circle_vertices[i+3] = circle_vertices[ i ];
         circle_vertices[i+4] = circle_vertices[i+1];
         circle_vertices[i+5] = circle_vertices[i+2];
-
     }
     circle_vertices[CIRCLE_SEGMENTS-3] = MODEL_LENGTH/2.0f * std::cosf(2.0f * glm::pi<float>() * 0 / CIRCLE_SEGMENTS);
     circle_vertices[CIRCLE_SEGMENTS-2] = MODEL_LENGTH/2.0f * std::sinf(2.0f * glm::pi<float>() * 0 / CIRCLE_SEGMENTS);
     circle_vertices[CIRCLE_SEGMENTS-1] = 0.0f;
-    
-
-    for(int i = 0; i < CIRCLE_SEGMENTS; i+=3) {
-
-        std::cout << i << "\t" << circle_vertices[i] << "\t\t" << circle_vertices[i+1] << "\t\t" << circle_vertices[i+2] << std::endl;
-    }
 }
 
 void Draw(unsigned int buffer, glm::mat4 model_mat, glm::vec4 color, int vertices_size) {
