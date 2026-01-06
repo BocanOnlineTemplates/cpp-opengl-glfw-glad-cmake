@@ -16,5 +16,5 @@ other:
   - ./scripts/build-release.sh  --(build the release configuration)
   - ./scripts/run-debug.sh      --(run the application with debug config)
   - ./scripts/run-release.sh    --(run the application with release config)
-  - ./scripts/clean.sh          --(remove build-debug/ and build-release/) 
+  - ./scripts/build-clean.sh    --(remove build-debug/ and build-release/) 
 
